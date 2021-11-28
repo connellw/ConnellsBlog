@@ -110,7 +110,7 @@ private MyResult DoAThingAndLogIt(SomeObject someObject)
 }
 ```
 
-Note that both those methods accept a `SomeObject` parameter and return a `MyResult`. All we've done is wrap around the method and logged stuff. It would be easy to switch between those methods in the calling code!
+Note that both those methods accept a `SomeObject` parameter and return a `MyResult`. All we've done is wrap around the method and logged stuff. It would be easy to switch between those methods in the calling code.
 
 ```c#
 public MyResult DoImportantLogic(string someArg)
@@ -202,7 +202,7 @@ You could even make this configurable if you like. For example, you could regist
 
 # Pipelines
 
-We've solved problems 1-4 so far, but it can be quite cumbersome to write decorators for every class you'd usually log from. We're still going to review and talk about what should be logged, get the wrong level or property name, etc. We might need something more generic.
+We've solved problems #1-4 so far, but it can be quite cumbersome to write decorators for every class you'd usually log from. We're still going to review and talk about what should be logged, get the wrong level or property name, etc. We might need something more generic.
 
 Depending on what you want to "wrap around", there might already be a way to write one logging class for many uses.
 
@@ -383,7 +383,7 @@ Type interception wasn't scary enough for you? Want to log some `private` method
 
 # Is Everywhere Useful?
 
-But should you? I'd actually say, probably not. We still haven't addressed problem #7 yet - the log and rethrow anti-pattern.
+So you can put this stuff nearly everywhere. But should you? I'd actually say, probably not. We still haven't addressed problem #7 yet - the log and rethrow anti-pattern.
 
 In my opinion, logging all these verbose "this is where I got to" lines feels old-fashioned. I tend to write web applications, not console applications. My error details will be returned to my API when using a development environment. For trace information, we have debuggers nowadays. The scale we work at in production might mean such verbose logging is impractical anyway.
 
