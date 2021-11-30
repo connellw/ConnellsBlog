@@ -4,7 +4,7 @@ title: You Don't Need Logging Code
 tags: aop logging decorator
 ---
 
-This an opinion I've held and maintained for some years now. The title is a little disingenuous. What I actually mean is that classes should not be concerned with what they need to log. Take this example.
+This an opinion I've held and maintained for some years now. The title is a little disingenuous. What I actually mean is that business classes should not be concerned with what they need to log. Take this example.
 
 ```csharp
 public MyResult DoImportantLogic(string someArg)
@@ -32,38 +32,39 @@ public MyResult DoImportantLogic(string someArg)
 
 I see this sort of code far too often. Let me explain what's wrong with it.
 
-##### 1. There's an implicit boundary
+##### 1. Implicit boundary
 
 It's all about [drawing boxes](/drawing-boxes). The developer who wrote those log lines defined the concept of "a thing", but only in the logs. If we saw the same thing with comments, we would want to refactor into a new `DoAThing()` method, so I feel we should do the same here. The structure of our code should match how we break down the problem in our minds.
 
-It's not just about grouping things together and hiding them in a different part of the file. A method scopes the variables declared within that section of code so they cannot interfere with those outside. Extracting a method forces us to explicitly define which arguments are passed into the method and which are returned from it. The boundary is clearer and more rigid, which helps us avoid spaghetti code as it develops.
+It's not just about grouping things together and hiding them in a different part of the file. A method scopes the variables so they cannot interfere with those outside. Extracting a method forces us to explicitly define which arguments are passed into the method and which are returned from it. The boundary is clearer and more rigid, which helps us avoid spaghetti code as it develops.
 
-##### 2. There are too many constructor parameters
+##### 2. Too many constructor parameters
 
 In his book Clean Code, Uncle Bob makes the case for an upper limit of three parameters for all functions.
 
 > The ideal number of arguments for a function is zero (niladic). Next comes one (monadic) followed closely by two (dyadic). Three arguments (triadic) should be avoided where possible. More than three (polyadic) requires very special justification—and then shouldn't be used anyway.
+>
 > -- Robert C. Martin
 
 Constructors are essentially a function that creates an instance of a class. The constructor parameters show us what the class depends on - they're usually the first thing you see when opening a class file and the signature of the constructor is an indicator of what a class' responsibility is. Is the class responsible for logging? Is that part of its single responsibility? Not in this case.
 
-##### 3. We have not separated cross cutting concerns
+##### 3. Not separating cross cutting concerns
 
 Logging is called a **cross-cutting concern** because it is often used in many parts of our application: presentation, business logic, database code; they all want to write log lines. When we talk about [separation of concerns](https://en.wikipedia.org/wiki/Separation_of_concerns), the word 'concern' is not a coincidental homophone - it's the same thing.
 
 Sometimes it's difficult to define what a concern really is when we're trying to separate them, but not this one - examples of cross-cutting concerns are all over the internet, and logging is usually the first.
 
-##### 4. Should the tests have to test logging?
+##### 4. Fake loggers in tests
 
 Often I see the `ILogger` interface mocked out and ignored in unit tests. Just because it keeps the runtime happy. It's almost as if the class is not really *concerned* with logging, right?
 
-##### 5. We spend so much time talking about it
+##### 5. Too much time talking about it
 
-I've worked in teams where we spend a *huge* chunk of our time writing log lines, discussing what to log, what level (Debug, Info, Warn) to log which things at, commenting on PRs suggesting adding another property. We spent time discussing logging standards and wrote documents explaining them. And we still got it wrong anyway - we'd have to raise new PRs to rename a log property to make it consistent with another part of the application. What a colossal waste of time.
+I've worked in teams where we spend a *huge* chunk of our time writing log lines, discussing what to log, what level (Debug, Info, Warn) to log which things at, commenting on PRs suggesting adding another property. We spent time discussing logging standards and wrote documents explaining them. And we still got it wrong anyway - we'd have to raise new PRs to rename a log property to make it consistent with another part of the application. What a colossal waste of time!
 
-Do you know what, this is about separating concerns too. We managed to write the rules in one place. Couldn't we implement them in one place? Perhaps one class that has the single responsibility of logging? And only speak about it when we work on the code that is concerned with logging?
+This is about separating concerns too. We managed to write the rules in one place. Couldn't we implement them in one place? Perhaps one class that has the single responsibility of logging? And only speak about it when we work on the code that is concerned with logging?
 
-##### 6. There's so much boilerplate
+##### 6. Boilerplate obfuscates the logic
 
 There's so much of it! Sometimes more than half the lines of code are related to logging. It clutters the codebase so important logic gets obfuscated and is harder to read.
 
@@ -121,9 +122,7 @@ public MyResult DoImportantLogic(string someArg)
 }
 ```
 
-# Decorators
-
-You might've noticed that all 3 of those methods used different fields from the parent class. So what is the responsibility of the class? This might be an indicator that all 3 of these should be in separate classes, each with their relevant fields injected into their constructors.
+You might've noticed that all 3 of those methods used different fields from the parent class. So what is the responsibility of the class? This might indicate that all 3 of these should be in separate classes, each with the relevant fields injected into them.
 
 The innermost method `DoAThing` only needs two dependencies for its parent class.
 
@@ -139,6 +138,8 @@ public class ThingDoer : IThingDoer
     }
 }
 ```
+
+# Decorators
 
 For the logging method in the middle, we need a dependency for the `IThingDoer` above, and another for `ILogger`.
 
@@ -181,7 +182,7 @@ public class ImportantLogicDoer
     {
         var someObject = _objectGenerator.Create(someArg);
 
-        return DoAThingAndLogIt(someObject);
+        return _thingDoer.DoAThing(someObject);
     }
 }
 ```
@@ -189,7 +190,9 @@ public class ImportantLogicDoer
 So we decide whether the logging is included outside of all of this, when we are wiring up our dependencies.
 
 ```c#
-new LoggingThingDoer(new ThingDoer(new SetterUpper(), new Worker()), new Logger())
+IThingDoer originalThingDoer = new ThingDoer(new SetterUpper(), new Worker());
+IThingDoer decoratedThingDoer = new LoggingThingDoer(originalThingDoer, new Logger());
+ImportantLogicDoer logicDoer = new ImportantLogicDoer(new ObjectGenerator(), decoratedThingDoer);
 ```
 
 Of course you don't have to new-up the dependencies. [Autofac supports adding decorators with an easy one-liner](https://autofac.readthedocs.io/en/latest/advanced/adapters-decorators.html#decorators) and similar things are possible with other DI containers.
@@ -198,7 +201,7 @@ Of course you don't have to new-up the dependencies. [Autofac supports adding de
 builder.RegisterDecorator<LoggingThingDoer, IThingDoer>();
 ```
 
-You could even make this configurable if you like. For example, you could register some verbose logging decorators only when a certain flag is set in config.
+You could even make this configurable if you like. For example, you could register some verbose logging decorators only when a certain flag is set.
 
 # Pipelines
 
@@ -315,8 +318,6 @@ public class LoggingInterceptor : IInterceptor
 }
 ```
 
-You may have noticed that interceptors are not asynchronous, but you can get around this with some [reflection magic](https://github.com/castleproject/Core/blob/master/docs/dynamicproxy-async-interception.md) too.
-
 Something this generic would need a custom approach to dealing with which properties to log. You could use reflection to iterate through properties on the method parameters and return value, log them all, use a convention-based approach, or perhaps check for a custom attribute indicating that you want that property to be logged.
 
 The `Castle.Core.DynamicProxy.IProxyGenerator` interface is used to create the proxy types at runtime. [Autofac supports wiring this up automatically](https://autofac.readthedocs.io/en/latest/advanced/interceptors.html) though its DynamicProxy extension.
@@ -338,7 +339,7 @@ Type interception relies on creating runtime types where the decorator pattern c
 
 Haven't we gone far enough? Well, maybe, but in for a penny.
 
-Maybe now you have a handful of very similar looking behaviors, interceptors, middlewares, etc. Maybe you have logging absolutely everywhere.
+Maybe now you have a handful of very similar looking behaviors, interceptors, middlewares, etc, and you have logging absolutely everywhere.
 
 ![Log all of the things](/images/memes/log-all-the-things.png)
 
