@@ -46,6 +46,11 @@
     <meta property="og:image" content="{{ site.avatar }}">
     {% endif %}
 
+    {% if site.footer-links.twitter %}
+    <meta content="@{{ site.footer-links.twitter }}" property="twitter:site">
+    <meta content="@{{ site.footer-links.twitter }}" property="twitter:creator">
+    {% endif %}
+
     {% if page.categories %}
     {% for category in page.categories limit:1 %}
     <meta content="{{ category }}" property="article:section">
