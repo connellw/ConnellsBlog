@@ -53,6 +53,9 @@ collections:
   talks:
     permalink: "/:collection/:title/"
     output: true
+  drafts:
+    permalink: "/:collection/:title/"
+    output: true
 defaults:
 - scope:
     path: _talks
