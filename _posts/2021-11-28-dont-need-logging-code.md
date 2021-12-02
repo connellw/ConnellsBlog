@@ -4,7 +4,7 @@ title: You Don't Need Logging Code
 tags: aop logging decorator
 ---
 
-This an opinion I've held and maintained for some years now. The title is a little disingenuous. What I actually mean is that business classes should not be concerned with what they need to log. Take this example.
+This an opinion I've held for some years now. The title is a little disingenuous. What I actually mean is that business classes should not be concerned with what they need to log. Take this example.
 
 ```csharp
 public MyResult DoImportantLogic(string someArg)
