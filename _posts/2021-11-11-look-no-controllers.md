@@ -12,7 +12,7 @@ When following this principle, I've found that changing a public method signatur
 public Task DoTheThing(ThingContext context)
 ```
 
-So in controllers, rather than adding a new parameter with a `[FromRoute]` or `[FromQuery]` attribute, I opt just have one object and add the attributes to a property of that object. Following this rule means I don't break as many unit tests by changing the action's signature too.
+I practice this in my controllers too, so rather than adding a new parameter with a `[FromRoute]` or `[FromQuery]` attribute, I opt just have one object and add the attributes to a property of that object. Following this rule means I don't break as many unit tests by changing the action's signature.
 
 But now all my controller actions look the same. They're all just boilerplate methods that follow the same step-by-step process. Which got me asking,
 > Can I write this process once? Can I write a generic pipeline for every HTTP request? Can I get rid of the controllers?

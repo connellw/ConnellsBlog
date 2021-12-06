@@ -279,7 +279,7 @@ In Entity Framework you can implement a `DbCommandInterceptor` to do the same th
 
 # Type Interception
 
-Okay, but what if there isn't a pipeline available? What if it's just a classic call to an interface I've defined in the same library? Now we're getting deeper into the realm of **Aspect-Oriented Programming**.
+Okay, but what if there isn't a pipeline available? What if it's just a classic call to an interface I've defined in the same library?
 
 This is where we add some magic and, I admit, it can get a little scary, but in the pursuit of ridding our codebase of boilerplate logging code, we must accept the trade-off:
 
@@ -377,6 +377,8 @@ public class LoggingAspect : IAspect
     }
 }
 ```
+
+The name `Aspect` is from **Aspect-Oriented Programming** (AOP), which is what this whole article has been about. AOP is [a programming paradigm that adds behaviour to code without modifying it](https://en.wikipedia.org/wiki/Aspect-oriented_programming). Decorators, middlewares and interceptors are all ways to achieve this.
 
 ## IL Weaving
 
