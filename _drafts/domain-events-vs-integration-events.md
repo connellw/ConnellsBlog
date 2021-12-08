@@ -4,7 +4,7 @@ title: Domain Events vs Integration Events
 tags: ddd events
 ---
 
-There are often different kinds of events in an event-driven system. They often represent the same thing that has happened, but are used in different ways.
+There are often different kinds of events in an event-driven system. They often represent the same thing that has happened, but serve different purposes and have different advantages.
 
 # Domain Events
 
@@ -17,7 +17,7 @@ public class SomethingHappenedEvent : IDomainEvent
 }
 ```
 
-These are raised when methods are called making changes to domain **aggregates**. When domain events are dispatched, their handlers usually make more changes to other aggregates.
+These are raised when changes are made to domain **aggregates**. When domain events are dispatched, their handlers usually make more changes to other aggregates.
 
 ```c#
 internal class SomethingHappenedEventHandler : IDomainEventHandler<SomethingHappenedEvent>
@@ -45,7 +45,7 @@ However, Jimmy Bogard proposes [dispatching domain events immediately before com
 
 ![CQRS command sequence-ish diagram](/images/diagrams/sequence-ish-command.png)
 
-## MediatR Pipeline
+## Commit Behaviour
 
 When all requests behave this way, it's easy to define a single behaviour, writing this once and not violating the Single Responsibility Principle.
 
@@ -79,7 +79,7 @@ In this case, we can change our own state, then ensure the external state change
 
 To do this, Kamil Grzybek proposes [dispatching separate domain event notifications](http://www.kamilgrzybek.com/design/how-to-publish-and-handle-domain-events/) after the commit. This is a nice distinction and gives us the choice to handle inside or outside the transaction by handling the domain event or the domain event notification.
 
-Because our database transaction has already been committed, we will need to **schedule a job** to ensure the notification is processed. Otherwise the notification handling could fail, or our application could crash, and our application could be left in an inconsistent state. We can implement an Outbox pattern, which writes the notification to a data table as part of the same transaction and processed it later.
+Because our database transaction has already been committed, we will need to ensure the notification is processed even if the handler fails or our application crashes, otherwise our system could be left in an inconsistent state. We can implement an [Outbox pattern](https://microservices.io/patterns/data/transactional-outbox.html), which writes the notification to a data table as part of the same transaction and processes it later.
 
 One way of achieving this is by implementing a **generic domain event handler** for all domain events.
 
@@ -96,11 +96,11 @@ internal class DomainEventNotificationOutboxHandler<TEvent> : IDomainEventHandle
 }
 ```
 
-A separate background process would dispatch events from this outbox to the notification handlers. Exceptions in these handlers will not cancel the transaction, because it has already been committed. We will need a retry policy if these handlers fail. If they continuously fail, we must raise an alert for a human to deal with the problem.
+A separate background process would dispatch events from this outbox to the notification handlers. Exceptions in these handlers will not cancel the original transaction because it has already been committed — the event has already happened. We will need a retry policy if these handlers fail. If they continuously fail, we must raise an alert for a human to deal with the problem.
 
 ## Eventual Consistency
 
-The original request to commit the first transaction would return to the client before the above notification is processed.  From the client's point of view, their request was successful and all their changes *will* be reflected in the rest of the system, but maybe not immediately. The state changes will be propagated eventually through the handling of these notifications.
+The original request to commit the first transaction would return to the client before the above notification is processed. From the client's point of view, their request was successful and all their changes *will* be reflected in the rest of the system, but maybe not immediately. The state changes will be propagated eventually through the handling of these notifications.
 
 This appears to be the same concept as the [integration events defined in Microsoft's .NET Microservices Architecture e-book](https://docs.microsoft.com/en-us/dotnet/architecture/microservices/microservice-ddd-cqrs-patterns/domain-events-design-implementation#domain-events-versus-integration-events):
 
@@ -108,15 +108,15 @@ This appears to be the same concept as the [integration events defined in Micros
 
 ## Public Contracts
 
-Domain events (and their notifications) are designed to be handled internally. However, integration events are often part of your public API contracts that clients are allowed to subscribe to.
+Domain events (and their notifications) are usually designed to be handled internally. However, integration events are often part of the public API contracts that clients are allowed to subscribe to.
 
-Because they are public, they must be **versioned**. We can't make breaking changes to events that external systems are subscribed to.
+These could be published to subscribers using an Event Bus like RabbitMq, or some HTTP callback method like WebHooks or SignalR.
 
-These could be implemented by publishing events to subscribers over an Event Bus like RabbitMq, or some HTTP callback method like WebHooks or SignalR.
+Because they are public, they must be **versioned** somehow. We can't make breaking changes to events that external systems are subscribed to. This could be achieved similarly to other public APIs by maintaining multiple versions of the same event until all clients have migrated.
 
 ## Event Store
 
-Another option is to allow clients to query for past events. We would need to persist each event to some storage.
+Rather than publishing the events, another option is to allow clients to query them. We would need to persist each event to some storage.
 
 ```c#
 internal class EventStoreHandler<TEvent> : IDomainEventHandler<TEvent>
@@ -131,4 +131,10 @@ internal class EventStoreHandler<TEvent> : IDomainEventHandler<TEvent>
 }
 ```
 
-This could be the same persistence used for your notifications. Rather than removing notifications once they are handled, they could just be marked as published but remain in an event store for a period of time. This gives clients the option to query for events they may have missed or lost somehow.
+This could be the same persistence used for the domain event notifications. Rather than removing notifications once they are handled, they could remain in an event store for a period of time with a marker indicating that they have already been handled or published. This gives clients the option to query for events they may have missed or lost somehow.
+
+# Event Sourcing
+
+In fact, this event store could even be the primary source of the domain's data. We could rebuild the state of aggregates just by applying these events, then we wouldn't need a transaction to persist them atomically with the state changes — they *are* the state changes.
+
+Or we could do that and still use a transaction to persist the event along with a change to a separate **read store**. But we are now delving into what should perhaps be a separate post about CQRS...
