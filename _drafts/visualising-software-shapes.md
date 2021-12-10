@@ -30,13 +30,15 @@ Ports and Adapters was originally called the Hexagonal Architecture. There is no
 
 I had a go myself once.
 
-# Clean Architecture
-
 # Onion Architecture
 
 Onion Architecture is just Ports and Adapters architecture, but the business logic layer is further divided into domain logic and application logic.
 
 ## Castle Architecture
 
+## Clean Architecture
+
 ## Explicit Architecture
+
+# Vertical Slice Architecture
 
