@@ -4,7 +4,7 @@ title: Domain Events vs Integration Events
 tags: ddd events
 ---
 
-There are often different kinds of events in an event-driven system. They often represent the same thing that has happened, but serve different purposes and have different advantages.
+These are different kinds of events found in event-driven systems. They often represent the same thing that has happened, but serve different purposes and have different advantages. Here I'd like to outline the differences between these two terms.
 
 # Domain Events
 
@@ -108,7 +108,7 @@ This appears to be the same concept as the [integration events defined in Micros
 
 ## Public Contracts
 
-Domain events (and their notifications) are usually designed to be handled internally. However, integration events are often part of the public API contracts that clients are allowed to subscribe to.
+Domain events (and their notifications) would be handled within the boundary of the domain. However, integration events are often part of the public API contracts that clients are allowed to subscribe to.
 
 These could be published to subscribers using an Event Bus like RabbitMq, or some HTTP callback method like WebHooks or SignalR.
 
