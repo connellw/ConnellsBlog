@@ -8,14 +8,12 @@ layout: default
 
       <h1><a href="{{ site.baseurl }}{{ talk.url }}">{{ talk.title }}</a></h1>
 
+      {% include entry-meta.html content=talk %}
+
       <a href="{{ site.baseurl }}{{ talk.url }}"><img class="thumbnail" src="{{ talk.thumbnail }}" /></a>
 
       <div class="entry">
         {{ talk.excerpt }}
-      </div>
-
-      <div class="date">
-        Spoken at {{ talk.location }} on {{ talk.date | date: "%e %B %Y" }}
       </div>
 
       <a href="{{ site.baseurl }}{{ talk.url }}" class="read-more">Watch Online</a>
