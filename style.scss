@@ -299,13 +299,24 @@ nav {
   font-size: 0.7em;
   color: #bbb;
 
-  span { padding-right: 20px; }
+  span {
+    padding-right: 20px;
+    
+    &:before {
+        margin-right: 3px;
+        vertical-align: middle;
+    }
 
-  a {
-    color: inherit;
+    &.date:before {
+        content: url('/images/icons/clock.svg');
+    }
+
+    &.location:before {
+        content: url('/images/icons/house.svg');
+    }
   }
 
-  .date {
+  a {
     color: inherit;
   }
 }
