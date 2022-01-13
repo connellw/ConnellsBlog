@@ -14,15 +14,15 @@ Sometimes I wonder if everyone views systems like this. We [whiteboard boxes and
 
 Many of us have worked with N-Tier or Layered solutions before. Traditionally you might find a **user interface** that depends on a **business logic layer** (BLL), which itself depends on a **data access layer** (DAL).
 
-- diagram
-
-
+![N-tier vertical diagram](/images/diagrams/n-tier-vertical.svg)
 
 # Hexagonal Architecture
 
 In 2005, Alistair Cockburn suggested putting the logic at the bottom of the dependency hierarchy. He called it the [Hexagonal Architecture](https://alistair.cockburn.us/hexagonal-architecture/).
 
 There is nothing special about the number six here, it is just a nice way to visualise the architecture. It's diagrams tend to use a hexagon in the middle, but the shape doesn't matter; it can just as easily be drawn as a circle.
+
+![N-tier vertical diagram](/images/diagrams/hexagonal.svg)
 
 He introduced the **Ports and Adapters** pattern, which later became another name for the architecture itself. A **port** is, like ports on electrical gadgets, an interface, where anything that "fits the mechanical and electrical protocols can be plugged in." An **adapter** is the [Gang of Four adapter design pattern](https://refactoring.guru/design-patterns/adapter) that implements one interface (the port) and encapsulates another.
 
