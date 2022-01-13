@@ -4,7 +4,7 @@ title: Domain Events vs Integration Events
 tags: ddd events
 ---
 
-These can be different kinds of events found in event-driven systems. They often represent the same thing that has happened, but serve different purposes and have different advantages. Here I'd like to outline the differences between these two terms.
+There are different kinds of events found in event-driven systems. They often represent the same thing that has happened, but serve different purposes and have different advantages. Here I'd like to outline the differences between a few terms.
 
 # Domain Events
 
@@ -69,13 +69,13 @@ internal class CommitPipelineBehavior : IPipelineBehavior
 
 ## In-memory
 
-Events that are dispatched before the transaction do not themselves need to be persisted to a database. If they only exist in memory, we don't need to worry about serializing them, so we're not restricted on what data they can contain. For example, they could have recursive properties, or maybe even contain sensitive information.
+Events that are dispatched before the transaction do not themselves need to be saved to a database. If they only exist in memory, we don't need to worry about serializing them, so we're not restricted on what data they can contain. For example, they could have recursive properties, or maybe even contain sensitive information.
 
-# Integration Events
+# Persisted Events
 
 Committing all state changes within one transaction is not always possible, such as when changing some external state over an API call. What happens if the API responds successfully but then our own transaction fails to commit? We must ensure the state is kept consistent between the two systems.
 
-In this case, we can change our own state, then ensure the external state change is done *after* our transaction has been committed.
+In this case, we can change our own state first, then ensure the external state change is done *after* our transaction has been committed.
 
 To do this, Kamil Grzybek proposes [dispatching separate domain event notifications](http://www.kamilgrzybek.com/design/how-to-publish-and-handle-domain-events/) after the commit. This is a nice distinction and gives us the choice to handle inside or outside the transaction by handling the domain event or the domain event notification.
 
@@ -102,19 +102,19 @@ A separate background process would dispatch events from this outbox to the noti
 
 The original request to commit the first transaction would return to the client before the above notification is processed. From the client's point of view, their request was successful and all their changes *will* be reflected in the rest of the system, but maybe not immediately. The state changes will be propagated eventually through the handling of these notifications.
 
-This appears to be the same concept as the [integration events defined in Microsoft's .NET Microservices Architecture e-book](https://docs.microsoft.com/en-us/dotnet/architecture/microservices/microservice-ddd-cqrs-patterns/domain-events-design-implementation#domain-events-versus-integration-events):
+# Integration Events
+
+This is a similar concept to [integration events defined in Microsoft's .NET Microservices Architecture e-book](https://docs.microsoft.com/en-us/dotnet/architecture/microservices/microservice-ddd-cqrs-patterns/domain-events-design-implementation#domain-events-versus-integration-events):
 
 > The purpose of integration events is to propagate committed transactions and updates to additional subsystems, whether they are other microservices, Bounded Contexts or even external applications. Hence, they should occur only if the entity is successfully persisted.
 
-## Public Contracts
-
-Domain events (and their notifications) would be handled within the boundary of the domain. However, integration events are often part of the public API contracts that clients are allowed to subscribe to.
+The above types of events would be handled internally within the boundary of the domain. However, integration events are part of the **public API contracts** that clients can subscribe to.
 
 These could be published to subscribers using an Event Bus like RabbitMq, or some HTTP callback method like WebHooks or SignalR.
 
 Because they are public, they must be **versioned** somehow. We can't make breaking changes to events that external systems are subscribed to. This could be achieved similarly to other public APIs by maintaining multiple versions of the same event until all clients have migrated.
 
-## Event Store
+## Query the Event Store
 
 Rather than publishing the events, another option is to allow clients to query them. We would need to persist each event to some storage.
 
@@ -131,7 +131,7 @@ internal class EventStoreHandler<TEvent> : IDomainEventHandler<TEvent>
 }
 ```
 
-This could be the same persistence used for the domain event notifications. Rather than removing notifications once they are handled, they could remain in an event store for a period of time with a marker indicating that they have already been handled or published. This gives clients the option to query for events they may have missed or lost somehow.
+This could be the same persistence used for the persisted events mentioned earlier. Rather than removing notifications once they are handled, they could remain in an event store for a period of time with a marker indicating that they have already been handled or published. This gives clients the option to query for events they may have missed or lost somehow.
 
 # Event Sourcing
 
