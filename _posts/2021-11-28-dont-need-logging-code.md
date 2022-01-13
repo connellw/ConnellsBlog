@@ -345,7 +345,7 @@ Maybe now you have a handful of very similar looking behaviors, interceptors, mi
 
 ## Adapters
 
-It's possible to abstract all of these pipelines and write adapters for a single aspect interface. This is the premise behind [Aspectos](https://github.com/connellw/Aspectos); a mini library I put together. All you do is implement `IAspect` once, then write that up to all of the behaviors and middlewares listed above.
+It's possible to abstract all of these pipelines and write adapters for a single interface. This is the premise behind [Aspectos](https://github.com/connellw/Aspectos); a mini library I put together. All you do is implement `IAspect` once, then wire that up to the behaviors and middlewares listed above.
 
 ```c#
 public class LoggingAspect : IAspect

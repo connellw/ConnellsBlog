@@ -56,7 +56,7 @@ public class EntityFrameworkRepository : IRepository
 
 Ports and Adapters was originally called the Hexagonal Architecture. There is nothing special about the number six here. It's just a nice way to visualise the architecture. It's diagrams tend to use a hexagon in the middle, but the shape doesn't matter; it can just as easily be drawn as a circle.
 
-Onion Architecture is just Ports and Adapters architecture, but the business logic layer is further divided into domain logic and application logic. We draw the layers as circles around each other and the direction of dependency goes inwards.
+Onion Architecture is just Ports and Adapters architecture, but the business logic is further divided into more layers. We draw the layers as circles around each other and the direction of dependency goes inwards.
 
 ![Onion Architecture](/images/diagrams/onion-circular.png)
 
