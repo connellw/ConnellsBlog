@@ -321,6 +321,26 @@ nav {
   }
 }
 
+.tag-cloud {
+  .site-tag {
+    margin-right: 12px;
+    display: inline-block;
+
+    &.selected {
+      font-weight:bold;
+      color: $green;
+    }
+
+    a {
+    }
+  }
+}
+
+.tag-summary {
+  padding-bottom: 1em;
+  border-bottom: 1px solid #eee;
+}
+
 .entry {
   font-size: 0.9em;
 }

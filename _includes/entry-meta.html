@@ -11,7 +11,7 @@
     
     <span class="tags">
     {% for tag in include.content.tags %}
-      #{{ tag }}
+      <a href={{site.root}}/tags/{{tag}}>#{{ tag }}</a>
     {% endfor %}
     </span>
   </div>

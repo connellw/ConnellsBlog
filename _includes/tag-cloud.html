@@ -1,0 +1,17 @@
+<div class="tag-cloud">
+    {% assign tags = site.tags | sort %}
+    {% for tag in tags %}
+    {% if tag contains page.tag %}
+    <span class="site-tag selected" style="font-size: {{ tag | last | size  |  times: 17 | plus: 50  }}%">
+                #{{ tag[0] }}
+    </span>
+    {% else %}
+    <span class="site-tag">
+        <a href="/tags/{{ tag | first | slugify }}/"
+            style="font-size: {{ tag | last | size  |  times: 17 | plus: 50  }}%">
+                #{{ tag[0] }}
+        </a>
+    </span>
+    {% endif %}
+    {% endfor %}
+</div>
