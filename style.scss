@@ -236,12 +236,12 @@ nav {
 // .main
 //
 
-.posts > .post {
+.entries > .entry {
   padding-bottom: 2em;
   border-bottom: 1px solid $lightGray;
 }
 
-.posts > .post:last-child {
+.entries > .entry:last-child {
   padding-bottom: 1em;
   border-bottom: none;
 }
@@ -341,7 +341,7 @@ nav {
   border-bottom: 1px solid #eee;
 }
 
-.entry {
+.content {
   font-size: 0.9em;
 }
 

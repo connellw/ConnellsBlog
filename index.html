@@ -2,19 +2,10 @@
 layout: default
 ---
 
-<div class="posts">
-  {% for post in site.posts %}
-    <article class="post">
+{% assign entries = site.posts | concat: site.talks | sort: 'date' | reverse %}
 
-      <h1><a href="{{ site.baseurl }}{{ post.url }}">{{ post.title }}</a></h1>
-
-      {% include entry-meta.html content=post %}
-
-      <div class="entry">
-        {{ post.excerpt }}
-      </div>
-
-      <a href="{{ site.baseurl }}{{ post.url }}" class="read-more">Read More</a>
-    </article>
+<div class="entries">
+  {% for entry in entries %}
+    {% include entry-collapsed.html entry=entry %}
   {% endfor %}
 </div>

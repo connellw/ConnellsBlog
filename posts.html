@@ -2,14 +2,8 @@
 layout: default
 ---
 
-{% include tag-cloud.html %}
-
-<div class="tag-summary">
-{{ content }}
-</div>
-
 <div class="entries">
-  {% for post in site.tags[page.tag] %}
+  {% for post in site.posts %}
     {% include entry-collapsed.html entry=post %}
   {% endfor %}
 </div>

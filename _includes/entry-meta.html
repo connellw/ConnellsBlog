@@ -1,16 +1,17 @@
+  {% assign entry = include.entry %}
   <div class="entry-meta">
     <span class="date">
-      {{ include.content.date | date_to_long_string: "ordinal" }}
+      {{ entry.date | date_to_long_string: "ordinal" }}
     </span>
 
-    {% if include.content.location %}
+    {% if entry.location %}
     <span class="location">
-      {{ include.content.location }}
+      {{ entry.location }}
     </span>
     {% endif %}
     
     <span class="tags">
-    {% for tag in include.content.tags %}
+    {% for tag in entry.tags %}
       <a href={{site.root}}/tags/{{tag}}>#{{ tag }}</a>
     {% endfor %}
     </span>

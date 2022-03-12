@@ -5,19 +5,6 @@ title: Talks
 
 <div class="talks">
   {% for talk in site.talks %}
-    <div class="talk">
-
-      <h1><a href="{{ site.baseurl }}{{ talk.url }}">{{ talk.title }}</a></h1>
-
-      {% include entry-meta.html content=talk %}
-
-      <a href="{{ site.baseurl }}{{ talk.url }}"><img class="thumbnail" src="{{ talk.thumbnail }}" /></a>
-
-      <div class="entry">
-        {{ talk.excerpt }}
-      </div>
-
-      <a href="{{ site.baseurl }}{{ talk.url }}" class="read-more">Watch Online</a>
-    </div>
+    {% include entry-collapsed.html entry=talk %}
   {% endfor %}
 </div>

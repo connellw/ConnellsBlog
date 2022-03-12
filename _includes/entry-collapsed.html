@@ -1,0 +1,23 @@
+{% assign entry = include.entry %}
+<article class="entry {{ entry.layout }}">
+
+  <h1><a href="{{ site.baseurl }}{{ entry.url }}">{{ entry.title }}</a></h1>
+
+  {% include entry-meta.html entry=entry %}
+
+  {% if entry.thumbnail %}
+    <a href="{{ site.baseurl }}{{ entry.url }}"><img class="thumbnail" src="{{ entry.thumbnail }}" /></a>
+  {% endif %}
+
+  <div class="entry">
+    {{ entry.excerpt }}
+  </div>
+
+  <a href="{{ site.baseurl }}{{ entry.url }}" class="read-more">
+    {% if entry.layout == 'post' %}
+    Read More
+    {% elsif entry.layout == 'talk' or entry.layout == 'video' %}
+    Watch Online
+    {% endif %}
+  </a>
+</article>
