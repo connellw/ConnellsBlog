@@ -104,11 +104,11 @@ The original request to commit the first transaction would return to the client 
 
 # Integration Events
 
-This is a similar concept to [integration events defined in Microsoft's .NET Microservices Architecture e-book](https://docs.microsoft.com/en-us/dotnet/architecture/microservices/microservice-ddd-cqrs-patterns/domain-events-design-implementation#domain-events-versus-integration-events):
+That all sounds like a similar concept to the [integration events defined in Microsoft's .NET Microservices Architecture e-book](https://docs.microsoft.com/en-us/dotnet/architecture/microservices/microservice-ddd-cqrs-patterns/domain-events-design-implementation#domain-events-versus-integration-events):
 
 > The purpose of integration events is to propagate committed transactions and updates to additional subsystems, whether they are other microservices, Bounded Contexts or even external applications. Hence, they should occur only if the entity is successfully persisted.
 
-The above types of events would be handled internally within the boundary of the domain. However, integration events are part of the **public API contracts** that clients can subscribe to.
+The difference is that the types of events mentioned earlier would be handled internally within the boundary of the domain, whereas integration events are part of the **public API contracts** that other systems can subscribe to.
 
 These could be published to subscribers using an Event Bus like RabbitMq, or some HTTP callback method like WebHooks or SignalR.
 
@@ -131,10 +131,10 @@ internal class EventStoreHandler<TEvent> : IDomainEventHandler<TEvent>
 }
 ```
 
-This could be the same persistence used for the persisted events mentioned earlier. Rather than removing notifications once they are handled, they could remain in an event store for a period of time with a marker indicating that they have already been handled or published. This gives clients the option to query for events they may have missed or lost somehow.
+This could be the same persistence used for the persisted events mentioned earlier. Rather than removing them from the store once they are handled, they could remain in an event store for a period of time. This gives clients the option to query for events they may have missed or lost somehow.
 
 # Event Sourcing
 
-In fact, this event store could even be the primary source of the domain's data. We could rebuild the state of aggregates just by applying these events, then we wouldn't need a transaction to persist them atomically with the state changes — they *are* the state changes.
+In fact, an event store could even be the primary source of the domain's data. We could rebuild the state of aggregates just by applying these events, then we wouldn't need a transaction to persist them atomically with the state changes — they *are* the state changes.
 
 Or we could do that and still use a transaction to persist the event along with a change to a separate **read store**. But we are now delving into what should perhaps be a separate post about CQRS...

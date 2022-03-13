@@ -44,7 +44,7 @@ However, the core is further divided into other layers and the dependencies poin
 
 ## Castle Architecture
 
-None of these diagrams have to be circular. These are just visual cues that help build a picture in our minds. To prove this, I invented the Castle Architecture.
+None of these diagrams have to be circular. These are just visual cues that help build a picture in our minds. To prove this, I present to you the Castle Architecture.
 
 ![Castle architecture diagram](/images/diagrams/castle-architecture.svg)
 
@@ -57,6 +57,10 @@ The code would be exactly the same as Onion Architecture. The projects and their
 [Uncle Bob Martin's Clean Architecture](https://blog.cleancoder.com/uncle-bob/2012/08/13/the-clean-architecture.html) brings a number of different architectures together under one roof. Using the same Dependency Rule as Hexagonal and Onion, dependencies go inwards.
 
 The names of the objects in the layers are more refined, explaining how far from the core certain ideas should be.
+
+It adds an outermost layer contains the Frameworks and Drivers, where not much actual code lives, which is distinct from the Interface Adapters in the layer below where the Controllers and Repositories live.
+
+Additionally, a flow of control is defined, from Controllers, through Interactors, to Presenters.
 
 ## Explicit Architecture
 
