@@ -1,7 +1,7 @@
 ---
 layout: post
 title: Well-Crafted Software
-tags: refactoring quality
+tags: refactoring
 ---
 
 Great engineers truly care about what it is they're building. Not just the end result, making a customer happy and getting paid. They enjoy the engineering process, they love the tools they use, and they get a kick out of the job itself.
