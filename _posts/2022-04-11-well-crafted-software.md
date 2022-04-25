@@ -20,20 +20,20 @@ By far the most common push-back is, *"we need to get this done quick"*, assumin
 
 It's usually pedalled by project managers, sometimes even by other engineers, and often served with a side of misunderstood agile jargon.
 
-Sometimes it's *"only the MVP"*. Agile is about releasing working software frequently to get early feedback for further iterations. So if this statement is meant to be an reason not to write well-crafted code, then it assumes that code quality improves over time. In most cases however, [software entropy](https://en.wikipedia.org/wiki/Software_entropy) will prevail -- the quality will deteriorate over time.
+Sometimes it's *"only the MVP"*. Agile is about releasing working software frequently to get early feedback for further iterations. So if this statement is meant to be a reason not to write well-crafted code, then it assumes that code quality improves over time. In most cases, however, [software entropy](https://en.wikipedia.org/wiki/Software_entropy) will prevail -- the quality will deteriorate over time.
 
 One way to avoid that is the promise of *"repaying tech debt later"*. We'll add something to the backlog. Let's be honest, this rarely comes to fruition. Usually because the person making the promise doesn't see the risk in "tech debt", forgets about it, and moves on to the next project.
 
-The phrase *"tactical solution"* has somehow became synonymous with a workaround. Tactics are **the concrete steps you take towards a strategic goal**, not something you do in lieu of a strategy. Agile development is tactical by nature -- it's about delivering incremental value and responding to change. A tactical solution iterates towards your goal and should be architected appropriately.
+The phrase *"tactical solution"* has somehow become synonymous with a workaround. [Building something quickly isn't the same as building something tactical](http://www.codingthearchitecture.com/2007/06/21/the_tactical_solution.html). Tactics are **the concrete steps you take towards a strategic goal**, not something you do in lieu of a strategy. Agile development is tactical by nature -- it's about delivering incremental value and responding to change. A tactical solution iterates towards your goal and should be architected appropriately.
 
 # Duct Tape
 
 Don't get me wrong, duct tape has its place. If there is a hole in the water pipe, and the room is beginning to flood, a great engineer's first action wouldn't be to drive to the nearest plumbing supply store and buy a replacement pipe. Put a plaster on it, stop it leaking first, *then* get your proper fix done.
 
-One-off solutions that no-one will ever use again, sure. The sort of thing you wouldn't even push up a git repo for. What's the point in version control if you're never going to manage changes?
+One-off solutions that no-one will ever use again, sure. The sort of thing you wouldn't even push up a git repo for. What's the point in version control if you're never going to manage changes? If it's truly one-off, throw it away. Far too often do short-term solutions become ingrained.
 
 > Nothing is more permanent than a temporary solution.
 
-But these should be exceptions to the rule. If the world isn't on fire, and there's a good chance you'll have to look at your code again, there's no reason engineers shouldn't care about their designs.
+But these should be exceptions to the rule. If the world isn't on fire, and if there's a good chance the code will be looked at again in future, there's no reason engineers shouldn't care about their designs.
 
-Businesses where these exceptions are the norm might discourage those engineers who have cared about their craft and learned how to do it well.
+In fact, businesses should encourage engineers to care. Not only will carefully-crafted software enable the frequent delivery of working software, a culture that supports a love for the code itself will attract engineers who have cared about their craft and learned how to do it well.
