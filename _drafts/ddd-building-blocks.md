@@ -34,7 +34,7 @@ public class BlogWrittenEvent : IDomainEvent
 
 Note the use of init-only properties. **Events are immutable**. They have already happened, which is why their names are written in past tense.
 
-I've chosen to have them all inherit an `IDomainEvent` interface here. This is helpful if I want to use a `ICollection<IDomainEvent>` later to store them in memory. It can also enforce conventional properties, such as an `Id`.
+I've chosen to have them all inherit [an `IDomainEvent` interface here](https://github.com/connellw/Doodad/blob/master/src/Doodad/IDomainEvent.cs). This is helpful if I want to use a `ICollection<IDomainEvent>` later to store them in memory. It can also enforce conventional properties, such as an `Id`.
 
 ## Value Objects
 
@@ -61,10 +61,9 @@ public class BankDetails : ValueObject
 }
 ```
 
-The `GetEqualityComponents` method is used by the equality comparison defined in the base class taken from Vladimir Khorikov's article [Value Object: a better implementation
-](https://enterprisecraftsmanship.com/posts/value-object-better-implementation/).
+The `GetEqualityComponents` method is used by the equality comparison defined in [the base class](https://github.com/connellw/Doodad/blob/master/src/Doodad/ValueObject.cs) taken from Vladimir Khorikov's article, ["Value Object: a better implementation"](https://enterprisecraftsmanship.com/posts/value-object-better-implementation/).
 
-They are also **immutable**. They are what they are. You can't mutate a string or an integer for the same reason -- they are just values.
+They are also **immutable**. You can't mutate a string or an integer for the same reason -- they are just values.
 
 But instead of init-only properties, I have used a constructor here as a standard, because we must ensure it is **impossible to construct an invalid value**. In this case the `SortCode` and `AccountNumber` types are also Value Objects which do their own validation.
 
@@ -91,13 +90,13 @@ public class SortCode : ValueObject
 }
 ```
 
-C# record types are quite a good fit for Value Objects, but [they're not perfect](https://enterprisecraftsmanship.com/posts/csharp-records-value-objects/). Perhaps in simple domains you won't need the `ValueObject` base class.
+C# record types are quite a good fit for Value Objects, but [they're not perfect](https://enterprisecraftsmanship.com/posts/csharp-records-value-objects/). Perhaps in simple domains you could get away with using these instead.
 
 ## Entities
 
-Other domain objects may have all the exact same values but would still not be considered equal. A `Hair` object may have the exact same colour, length, curliness, but it is not the same instance. In practice, Entities have an `Id` property to identify them as unique from other entities.
+Other domain objects may have all the exact same values but would still not be considered equal. In practice, Entities have an `Id` property to identify them as unique from other entities.
 
-Entities are mutable -- we can change their state. Therefore, Entities have a history, which we can represent through Domain Events.
+Entities are mutable -- we can change their state. Therefore, they have a history, which we can represent through Domain Events.
 
 ```c#
 public class Hair : Entity
@@ -125,11 +124,11 @@ public class Hair : Entity
 }
 ```
 
-We would only modify the entity through calling these methods. We can check that the action is valid, make the change, and then add the domain event to the `DomainEvents` collection which I have defined in the `Entity` base class.
+We would only modify the entity through calling these methods. We can check that the action is valid, make the change, and then add the domain event to the `DomainEvents` collection which I have defined in [the `Entity` base class](https://github.com/connellw/Doodad/blob/master/src/Doodad/Entity.cs).
 
 The base class also includes a standard `Id` property which all entities must have.
 
-Entities are usually loaded from a database, so must have a constructor that can populate all properties. Your application will usually want to create fresh new entities too, so you would either need a second constructor, or you could use a factory class or method to create fresh new entities in the default state.
+Entities are usually loaded from a database, so must have a constructor that can populate all properties. You'll usually need to create fresh new entities too, so you would either need a second constructor, or you could use a factory class or method to create fresh new entities in the default state.
 
 ```c#
 public class Hair : Entity
@@ -174,11 +173,13 @@ public class Car : Entity, IAggregateRoot
 }
 ```
 
-I have chosen to use an `IAggregateRoot` marker interface here. The interface itself does not define any members. You could use an `AggregateRoot` base class which itself derives from `Entity` to achieve the same thing.
+I have chosen to use [an `IAggregateRoot` marker interface](https://github.com/connellw/Doodad/blob/master/src/Doodad/IAggregateRoot.cs) here. The interface itself does not define any members. You could use an `AggregateRoot` base class which itself derives from `Entity` to achieve the same thing.
 
 ## Domain Service
 
 When we need to make changes across many aggregates, a service class can be used. These classes can contain business logic that doesn't naturally fit in other domain objects.
+
+There doesn't need to be any base type for these. They're just normal classes that encapsulate domain logic that can be used by your application.
 
 ## Repositories
 
