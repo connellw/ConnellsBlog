@@ -3,8 +3,10 @@ layout: default
 title: Talks
 ---
 
+{% assign talks = site.talks | sort: 'date' | reverse %}
+
 <div class="talks">
-  {% for talk in site.talks %}
+  {% for talk in talks %}
     {% include entry-collapsed.html entry=talk %}
   {% endfor %}
 </div>
