@@ -4,7 +4,7 @@ title: The Building Blocks of Domain-Driven Design
 tags: ddd
 ---
 
-When learning DDD, it's easy for us engineers to get caught up in all the technical jargon, the "Aggregate Roots" and "Domain Events". Fundamentally though, Domain-Driven design is not about the technical details; it's about creating a model and language that the business experts share with the technical experts (the software engineers). It is, perhaps ironically, about *not* using technical jargon.
+When learning DDD, it's easy for us engineers to get caught up in all the technical jargon: "Aggregate Roots", "Domain Events", etc. Fundamentally though, Domain-Driven design is not about the technical details; it's about creating a model and language that the business experts share with the technical experts (the software engineers). It is, perhaps ironically, about *not* using technical jargon.
 
 > The structure and language of the code should match that of the business domain.
 > -- Eric Evans
@@ -34,7 +34,7 @@ public class BlogWrittenEvent : IDomainEvent
 
 Note the use of init-only properties. **Events are immutable**. They have already happened, which is why their names are written in past tense.
 
-I've chosen to have them all inherit [an `IDomainEvent` interface here](https://github.com/connellw/Doodad/blob/master/src/Doodad/IDomainEvent.cs). This is helpful if I want to use a `ICollection<IDomainEvent>` later to store them in memory. It can also enforce conventional properties, such as an `Id`.
+I've chosen to have them all inherit [an `IDomainEvent` interface here](https://github.com/connellw/Doodad/blob/master/src/Doodad/IDomainEvent.cs). This is helpful if I want to use a `ICollection<IDomainEvent>` later to store them in memory. It could also enforce conventional properties, such as an `Id`.
 
 ## Value Objects
 
