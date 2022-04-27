@@ -6,11 +6,13 @@ tags: cqrs ddd events architecture
 
 A few people have asked for online resources where I have learned about DDD and CQRS.
 
+This post is a bit of a link dump.
+
 The big one is the whole [Tackling Business Complexity in a Microservice with DDD and CQRS Patterns](https://docs.microsoft.com/en-us/dotnet/architecture/microservices/microservice-ddd-cqrs-patterns/) section of this Microsoft e-book and the example [Ordering Service in eShopOnContainers repository](https://github.com/dotnet-architecture/eShopOnContainers/tree/dev/src/Services/Ordering).
 
 Then Herberto Graca's [DDD, Hexagonal, Onion, Clean, CQRS, … How I put it all together](https://herbertograca.com/2017/11/16/explicit-architecture-01-ddd-hexagonal-onion-clean-cqrs-how-i-put-it-all-together/) adds the Onion/Clean Architecture.
 
-Some sample repositories that use this architecture are [Jayson Taylor's CleanArchitecture repo](https://github.com/jasontaylordev/CleanArchitecture) and [TaskoMask](https://github.com/hamed-shirbandi/TaskoMask) (which I actually made a small contribution too myself!)
+Some sample repositories that use this architecture are [Jayson Taylor's CleanArchitecture repo](https://github.com/jasontaylordev/CleanArchitecture) and [TaskoMask](https://github.com/hamed-shirbandi/TaskoMask).
 
 For DDD base type implementations, Vladimir Khorikov's [entity implementation](https://enterprisecraftsmanship.com/posts/entity-base-class/) and [a better Value Object implementration](https://enterprisecraftsmanship.com/posts/value-object-better-implementation/). In fact, I learned a lot from many of the posts on Vladimir Khorikov's blog. You can also check out [my own implementations](https://github.com/connellw/Doodad/tree/master/src/Doodad) too.
 
