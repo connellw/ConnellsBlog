@@ -32,7 +32,7 @@ public class BlogWrittenEvent : IDomainEvent
 }
 ```
 
-Note the use of init-only properties. **Events are immutable**. They have already happened, which is why their names are written in past tense.
+Note the use of init-only properties. **Events are immutable**. They have already happened, which is why they are written in past tense.
 
 I've chosen to have them all inherit [an `IDomainEvent` interface here](https://github.com/connellw/Doodad/blob/master/src/Doodad/IDomainEvent.cs). This is helpful if I want to use a `ICollection<IDomainEvent>` later to store them in memory. It could also enforce conventional properties, such as an `Id`.
 
@@ -222,4 +222,4 @@ The Evans book says that aggregates should define the boundary for a transaction
 This could be handy for bulk changes done in domain services that must be consistent with each other. Although some might argue that if this is required then the aggregate boundaries should be reconsidered.
 
 If you're [dispatching domain events within the same transaction](https://lostechies.com/jimmybogard/2014/05/13/a-better-domain-events-pattern/
-), your domain event handlers can make changes to other aggregates and you can avoid dealing with eventual consistency or problems caused by an error in the event handler.
+), your domain event handlers can make changes to other aggregates and you can avoid dealing with eventual consistency or problems caused by an error in an event handler.
